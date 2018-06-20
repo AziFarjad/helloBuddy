@@ -1,0 +1,137 @@
+withSimpleCard(cardTitle: string, cardContent: string): this;
+withStandardCard(cardTitle: string, cardContent: string, smallImageUrl?: string, largeImageUrl?: string): this;
+
+https://gist.github.com/ankkal/6d771605143dbe20f1fcd7d9978f9917
+
+https://developer.amazon.com/docs/custom-skills/display-interface-reference.html#bodytemplate1
+
+
+// returns true if the skill is running on a device with a display (show|spot)
+function supportsDisplay(handlerInput) {
+  var hasDisplay =
+    handlerInput.requestEnvelope.context &&
+    handlerInput.requestEnvelope.context.System &&
+    handlerInput.requestEnvelope.context.System.device &&
+    handlerInput.requestEnvelope.context.System.device.supportedInterfaces &&
+    handlerInput.requestEnvelope.context.System.device.supportedInterfaces.Display
+
+  console.log("Supported Interfaces are" + JSON.stringify(handlerInput.requestEnvelope.context.System.device.supportedInterfaces));
+  return hasDisplay;
+}
+
+const DisplayImg1 = {
+      title: 'Jet Plane',
+      url: 'https://s3.amazonaws.com/skill-images-789/display/plane340_340.png'
+    };
+    const DisplayImg2 = {
+      title: 'Starry Sky',
+      url: 'https://s3-eu-west-1.amazonaws.com/suzyimages/Galaxy.jpg'
+    };
+
+
+// Template 1
+    if (supportsDisplay(handlerInput)) {
+      const myImage1 = new Alexa.ImageHelper()
+        .addImageInstance(DisplayImg1.url)
+        .getImage();
+
+      const myImage2 = new Alexa.ImageHelper()
+        .addImageInstance(DisplayImg2.url)
+        .getImage();
+        
+      const primaryText = new Alexa.RichTextContentHelper()
+             .withPrimaryText(speechOutput)
+             .getTextContent();
+         handlerInput.responseBuilder.addRenderTemplateDirective({
+             type: 'BodyTemplate1',
+             token: 'string',
+             backButton: 'HIDDEN',
+             backgroundImage: myImage2,
+             title: GET_FACT_MESSAGE,
+             textContent: primaryText,
+           });
+    }
+
+// Template 2
+   if (supportsDisplay(handlerInput)){
+      const myImage1 = new Alexa.ImageHelper()
+        .addImageInstance(DisplayImg1.url)
+        .getImage();
+
+      const myImage2 = new Alexa.ImageHelper()
+        .addImageInstance(DisplayImg2.url)
+        .getImage();
+
+      const primaryText = new Alexa.RichTextContentHelper()
+        .withPrimaryText(speechOutput)
+        .getTextContent();
+
+        handlerInput.responseBuilder.addRenderTemplateDirective({
+        type: 'BodyTemplate2',
+        token: 'string',
+        backButton: 'HIDDEN',
+        backgroundImage: myImage2,
+        image: myImage1,
+        title: "space facts",
+        textContent: primaryText
+      });
+      //handlerInput.responseBuilder.addHintDirective("This is a hint");
+  }
+
+// Template 6
+    if (supportsDisplay(handlerInput)){
+      const myImage1 = new Alexa.ImageHelper()
+        .addImageInstance(DisplayImg1.url)
+        .getImage();
+
+      const myImage2 = new Alexa.ImageHelper()
+        .addImageInstance(DisplayImg2.url)
+        .getImage();
+
+      const primaryText = new Alexa.RichTextContentHelper()
+        .withPrimaryText(speechOutput)
+        .getTextContent();
+
+        handlerInput.responseBuilder.addRenderTemplateDirective({
+        type: 'BodyTemplate6',
+        token: 'string',
+        backButton: 'HIDDEN',
+        backgroundImage: myImage2,
+        image: myImage1,
+        title: "space facts",
+        textContent: primaryText
+      });
+    }
+
+// Template 7
+if (supportsDisplay(handlerInput) ) {
+      const myImage1 = new Alexa.ImageHelper()
+        .addImageInstance(DisplayImg1.url)
+        .getImage();
+
+      const myImage2 = new Alexa.ImageHelper()
+        .addImageInstance(DisplayImg2.url)
+        .getImage();
+
+      const primaryText = new Alexa.RichTextContentHelper()
+        .withPrimaryText(STOP_MESSAGE)
+        .getTextContent();
+
+      handlerInput.responseBuilder.addRenderTemplateDirective({
+        type: 'BodyTemplate7',
+        token: 'string',
+        backButton: 'HIDDEN',
+        backgroundImage: myImage2,
+        image: myImage1,
+        title: "space facts",
+      });
+}
+
+// Video
+if (supportsDisplay(handlerInput) && handlerInput.requestEnvelope.context.System.device.supportedInterfaces.VideoApp) {
+      handlerInput.responseBuilder.addVideoAppLaunchDirective("https://s3.amazonaws.com/media.dabblelab.com/video/visual-escape-01.mp4", "Video from pixabay.com",
+        "Used under creative commons.");
+
+      return handlerInput.responseBuilder.speak("Heres your video").getResponse();
+    }
+

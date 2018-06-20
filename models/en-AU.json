@@ -1,0 +1,44 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "hello buddy",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "SayHelloIntent",
+                    "slots": [],
+                    "samples": [
+                        "Say hi",
+                        "Say Hello"
+                    ]
+                },
+                {
+                    "name": "NameIntent",
+                    "slots": [
+                        {
+                            "name": "Name",
+                            "type": "AMAZON.US_FIRST_NAME"
+                        }
+                    ],
+                    "samples": [
+                        "My name is {Name}",
+                        "People call me {Name}",
+                        "I am {Name}"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}

@@ -10,35 +10,30 @@ const DYNAMODB_TABLE = 'HelloBuddySkillTable';
 
 const SayHiHandler = {
   canHandle(handlerInput) {
-    console.log("Inside SampleHandler");
     const request = handlerInput.requestEnvelope.request;
-    return request.type === 'LaunchRequest'
-      || (request.type === 'IntentRequest'
+    return (request.type === 'IntentRequest'
         && request.intent.name === 'sayHiIntent');
   },
-  handle(handlerInput, error) {
-    console.log("Inside SampleHandler - handle");
-
-    let message = 'Hi. What is your name?';
+  handle(handlerInput) {
+    let message = 'hi. what is your name?';
 
     return handlerInput.responseBuilder
       .speak(message)
-      .reprompt('Can you tell me your name?')
+      .reprompt('')
+      .withSimpleCard("Name", "Azi")
       .getResponse();
   },
 };
 
 const GetNameHandler = {
   canHandle(handlerInput) {
-    console.log("Inside SampleHandler");
     const request = handlerInput.requestEnvelope.request;
     return (request.type === 'IntentRequest'
         && request.intent.name === 'getNameIntent');
   },
-  handle(handlerInput, error) {
-    console.log("Inside SampleHandler - handle");
-const request = handlerInput.requestEnvelope.request;
-    let name = request.intent.slots.name.value;
+  handle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    let name = request.intent.slots.Name.value;
     
     //GET SESSION ATTRIBUTES
     const attributes = handlerInput.attributesManager.getSessionAttributes();
@@ -48,9 +43,11 @@ const request = handlerInput.requestEnvelope.request;
 
     //SAVE ATTRIBUTES
     handlerInput.attributesManager.setSessionAttributes(attributes);
-    handlerInput.attributesManager.setPersistentAttributes(attributes);
-    handlerInput.attributesManager.savePersistentAttributes();
     
+    handlerInput.attributesManager.setPersistentAttributes(attributes);
+
+    //handlerInput.attributesManager.savePersistentAttributes() // we have it in response Intercepter
+
     let message = 'Nice to meet you ' + name;
 
     return handlerInput.responseBuilder
@@ -60,24 +57,25 @@ const request = handlerInput.requestEnvelope.request;
   },
 };
 
-const GetNewFactHandler = {
-  canHandle(handlerInput) {
-    const request = handlerInput.requestEnvelope.request;
-    return request.type === 'LaunchRequest'
-      || (request.type === 'IntentRequest'
-        && request.intent.name === 'GetNewFactIntent');
-  },
-  handle(handlerInput) {
-    const factArr = data;
-    const factIndex = Math.floor(Math.random() * factArr.length);
-    const randomFact = factArr[factIndex];
-    const speechOutput = GET_FACT_MESSAGE + randomFact;
+const ResponsePersistenceInterceptor = {
+    process(handlerInput, responseOutput) {
+        
+            //let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
-    return handlerInput.responseBuilder
-      .speak(speechOutput)
-      .withSimpleCard(SKILL_NAME, randomFact)
-      .getResponse();
-  },
+            //sessionAttributes['lastUseTimestamp'] = new Date(handlerInput.requestEnvelope.request.timestamp).getTime();
+
+            //handlerInput.attributesManager.setPersistentAttributes(sessionAttributes);
+
+            return new Promise((resolve, reject) => {
+                handlerInput.attributesManager.savePersistentAttributes()
+                    .then(() => {
+                        resolve();
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+    }
 };
 
 const HelpHandler = {
@@ -131,6 +129,49 @@ const SessionEndedRequestHandler = {
   },
 };
 
+const RequestPersistenceInterceptor = {
+    process(handlerInput) {
+        if(handlerInput.requestEnvelope.session['new']) {
+
+            return new Promise((resolve, reject) => {
+
+                handlerInput.attributesManager.getPersistentAttributes()
+
+                    .then((sessionAttributes) => {
+                        sessionAttributes = sessionAttributes || {};
+
+                        // console.log(JSON.stringify(sessionAttributes, null, 2));
+
+                        // if(Object.keys(sessionAttributes).length === 0) {
+                        //     console.log('--- First Ever Visit for userId ' + handlerInput.requestEnvelope.session.user.userId);
+
+                        //     const initialAttributes = constants.getMemoryAttributes();
+                        //     sessionAttributes = initialAttributes;
+
+                        // }
+
+                        sessionAttributes['launchCount'] = 1;
+                        // sessionAttributes['tempPassPhrase'] = generatePassPhrase().word1 + '-' + generatePassPhrase().word2 + '-' + generatePassPhrase().number;
+
+                        handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
+
+                        handlerInput.attributesManager.savePersistentAttributes()
+                            .then(() => {
+                                resolve();
+                            })
+                            .catch((err) => {
+                                reject(err);
+                            });
+
+                    });
+
+            });
+
+        } // end session['new']
+
+    }
+};
+
 const ErrorHandler = {
   canHandle() {
     return true;
@@ -151,35 +192,19 @@ const HELP_MESSAGE = 'You can say tell me a space fact, or, you can say exit... 
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Goodbye!';
 
-const data = [
-  'A year on Mercury is just 88 days long.',
-  'Despite being farther from the Sun, Venus experiences higher temperatures than Mercury.',
-  'Venus rotates counter-clockwise, possibly because of a collision in the past with an asteroid.',
-  'On Mars, the Sun appears about half the size as it does on Earth.',
-  'Earth is the only planet not named after a god.',
-  'Jupiter has the shortest day of all the planets.',
-  'The Milky Way galaxy will collide with the Andromeda Galaxy in about 5 billion years.',
-  'The Sun contains 99.86% of the mass in the Solar System.',
-  'The Sun is an almost perfect sphere.',
-  'A total solar eclipse can happen once every 1 to 2 years. This makes them a rare event.',
-  'Saturn radiates two and a half times more energy into space than it receives from the sun.',
-  'The temperature inside the Sun can reach 15 million degrees Celsius.',
-  'The Moon is moving approximately 3.8 cm away from our planet every year.',
-];
-
 const skillBuilder = Alexa.SkillBuilders.standard();
 
 exports.handler = skillBuilder
   .addRequestHandlers(
     SayHiHandler,
     GetNameHandler,
-    GetNewFactHandler,
     HelpHandler,
     ExitHandler,
     SessionEndedRequestHandler
   )
+  .addResponseInterceptors(ResponsePersistenceInterceptor)
+  .addRequestInterceptors(RequestPersistenceInterceptor)
   .addErrorHandlers(ErrorHandler)
   .withTableName(DYNAMODB_TABLE)
   .withAutoCreateTable(true)
   .lambda();
-

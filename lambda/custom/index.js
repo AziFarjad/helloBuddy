@@ -1,3 +1,9 @@
+let message = "<say-as interpret-as='interjection'>g'day</say-as>";
+message += "<break time='1s'/>" + " What is your name?”;
+
+let message = "<say-as interpret-as='interjection'>kia ora</say-as>";
+message += "<break time='1s'/>" + " What is your name?";
+
 const Alexa = require('ask-sdk');
 
 const SampleHandler = {

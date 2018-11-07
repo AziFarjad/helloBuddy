@@ -1,0 +1,31 @@
+const InProgressPetMatchIntent = {
+    canHandle(handlerInput) {
+      const request = handlerInput.requestEnvelope.request;
+  
+      return request.type === 'IntentRequest'
+        && request.intent.name === 'DogMatchIntent'
+        && request.dialogState !== 'COMPLETED';
+    },
+    handle(handlerInput) {
+        return handlerInput.responseBuilder
+        .addDelegateDirective()
+        .getResponse();
+    },
+};
+
+const CompletedPetMatchIntent =  {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'IntentRequest' && request.intent.name === 'DogMatchIntent' 
+           && request.dialogState === 'COMPLETED';
+    },
+    handle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        const responseBuilder = handlerInput.responseBuilder;
+
+        let say = "Here is your dog.";
+        return responseBuilder
+        .speak(say)
+        .getResponse();
+     },
+ };

@@ -170,6 +170,7 @@ const HELP_MESSAGE = 'You can say tell me a space fact, or, you can say exit... 
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Goodbye!';
 
+
 const data = [
   'A year on Mercury is just 88 days long.',
   'Despite being farther from the Sun, Venus experiences higher temperatures than Mercury.',

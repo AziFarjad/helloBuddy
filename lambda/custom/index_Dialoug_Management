@@ -38,3 +38,17 @@ const CompletedPetMatchIntent =  {
         .getResponse();
      },
  };
+ 
+ // Setting Default Values
+  let updatedIntent = handlerInput.requestEnvelope.intent;
+  let updatedSlots = updatedIntent.slots;
+
+  if( !updatedSlots.size.value) {
+	updatedSlots.size.value = 'medium';
+  }
+
+  return handlerInput.responseBuilder
+        .addDelegateDirective(updatedIntent)
+        .getResponse();
+
+

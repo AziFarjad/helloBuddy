@@ -23,6 +23,9 @@ const CompletedPetMatchIntent =  {
         const request = handlerInput.requestEnvelope.request;
         const responseBuilder = handlerInput.responseBuilder;
 
+        // Check to see if you have temparment, if not set a default for it
+        // Hit an API and select the right dog.
+        
         let say = "Here is your dog.";
         return responseBuilder
         .speak(say)

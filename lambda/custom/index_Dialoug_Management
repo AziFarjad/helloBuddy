@@ -34,35 +34,10 @@ const CompletedPetMatchIntent =  {
      },
  };
 
-// Extend Complete intent to take care of Denied confirmation for Intent
 
-const CompletedPetMatchIntent =  {
-    canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' && request.intent.name === 'DogMatchIntent' 
-           && request.dialogState === 'COMPLETED';
-    },
-    handle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        const responseBuilder = handlerInput.responseBuilder;
-
-        var say;
-
-        if (request.intent.confirmationStatus == 'DENIED') {
-            say = 'OK, I didn\'t match a dog.';
-        } else {
-            // Check to see if you have temparment, if not set a default for it
-            // Make the api call to select the right dog.
-            say = "Here is your dog.";
-        }
-        
-        return responseBuilder
-        .speak(say)
-        .getResponse();
-     },
- };
-
-// COMPLETE CODE
+----------------------------------------------------
+BE CONTEXTUAL
+Context switching to a new intent
 
 /*
 - ask pet match I want a guard dog
@@ -103,6 +78,34 @@ const InProgressPetMatchIntent = {
         .getResponse();
     },
 };
+
+// Extend Complete intent to take care of Denied confirmation for Intent
+
+const CompletedPetMatchIntent =  {
+    canHandle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        return request.type === 'IntentRequest' && request.intent.name === 'DogMatchIntent' 
+           && request.dialogState === 'COMPLETED';
+    },
+    handle(handlerInput) {
+        const request = handlerInput.requestEnvelope.request;
+        const responseBuilder = handlerInput.responseBuilder;
+
+        var say;
+
+        if (request.intent.confirmationStatus == 'DENIED') {
+            say = 'OK, I didn\'t match a dog.';
+        } else {
+            // Check to see if you have temparment, if not set a default for it
+            // Make the api call to select the right dog.
+            say = "Here is your dog.";
+        }
+        
+        return responseBuilder
+        .speak(say)
+        .getResponse();
+     },
+ };
  
  // Setting Default Values
   let updatedIntent = handlerInput.requestEnvelope.intent;

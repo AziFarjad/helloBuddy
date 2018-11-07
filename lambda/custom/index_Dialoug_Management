@@ -63,6 +63,13 @@ const CompletedPetMatchIntent =  {
 
 // COMPLETE CODE
 
+/*
+- ask pet match I want a guard dog
+- what is a small dog?
+- I want a small dog
+- A dog to protect me
+*/
+
 const InProgressPetMatchIntent = {
     canHandle(handlerInput) {
       const request = handlerInput.requestEnvelope.request;

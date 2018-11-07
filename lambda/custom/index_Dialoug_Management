@@ -7,6 +7,23 @@ const InProgressPetMatchIntent = {
         && request.dialogState !== 'COMPLETED';
     },
     handle(handlerInput) {
+    	/*
+	    const currentIntent = handlerInput.requestEnvelope.request.intent;
+	    const attributesManager = handlerInput.attributesManager;
+	    const sessionAttributes = attributesManager.getSessionAttributes();
+
+	    if(sessionAttributes[currentIntent.name]) {
+	      const tempSlots = sessionAttributes[currentIntent.name].slots;
+	      for(key in tempSlots) {
+		if (tempSlots[key].value && !currentIntent.slots[key].value) {
+		  currentIntent.slots[key] = tempSlots[key];
+		}
+	      }
+	    }
+	    sessionAttributes[currentIntent.name] = currentIntent;
+	    attributesManager.setSessionAttributes(sessionAttributes);
+    	*/
+    
         return handlerInput.responseBuilder
         .addDelegateDirective()
         .getResponse();

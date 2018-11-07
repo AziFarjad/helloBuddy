@@ -1,4 +1,5 @@
-// SIMPLE CODE
+// SIMPLE CODE - Using Dialoge Management - Be Relatable
+// Slot Elicitation - Under/Over answering management - Confirmation
 const InProgressPetMatchIntent = {
     canHandle(handlerInput) {
       const request = handlerInput.requestEnvelope.request;

@@ -29,7 +29,7 @@ const CompletedPetMatchIntent =  {
             say = 'OK, I didn\'t match a dog.';
         } else {
             // Check to see if you have temparment, if not set a default for it
-            // Hit an API and select the right dog.
+            // Make the api call to select the right dog.
             say = "Here is your dog.";
         }
         

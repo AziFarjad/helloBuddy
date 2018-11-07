@@ -51,4 +51,15 @@ const CompletedPetMatchIntent =  {
         .addDelegateDirective(updatedIntent)
         .getResponse();
 
+// Eliciting Slots
+  let say = ‘Banana is not a size. Choose small or medium?’;
+  const slotName = ‘size’;
+
+  return handlerInput.responseBuilder
+	.speak(say)
+	.reprompt(say)
+        .addElicitSlotDirective(slotName)
+        .getResponse();
+	
+	
 

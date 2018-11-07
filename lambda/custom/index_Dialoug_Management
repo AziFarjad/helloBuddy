@@ -15,6 +15,7 @@ const InProgressPetMatchIntent = {
 	    if(sessionAttributes[currentIntent.name]) {
 	      const tempSlots = sessionAttributes[currentIntent.name].slots;
 	      for(key in tempSlots) {
+	        // If we captured the value before and current intent is not capturing that same slot then store it to currentIntent 
 		if (tempSlots[key].value && !currentIntent.slots[key].value) {
 		  currentIntent.slots[key] = tempSlots[key];
 		}

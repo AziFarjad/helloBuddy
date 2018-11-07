@@ -1,0 +1,182 @@
+// Add the following utterance to PetMatchIntent
+// I want a {temperament} dog
+
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "dog match",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "DogMatchIntent",
+                    "slots": [
+                        {
+                            "name": "size",
+                            "type": "sizeType",
+                            "samples": [
+                                "I want a {size} dog",
+                                "I want a {temperment} {size} dog",
+                                "I want a {size} {temperment} dog"
+                            ]
+                        },
+                        {
+                            "name": "temperment",
+                            "type": "tempermentType"
+                        }
+                    ],
+                    "samples": [
+                        "I want a {temperment} dog",
+                        "match a dog",
+                        "find a dog",
+                        "I want a {size} {temperment} dog",
+                        "I want a {temperment} {size} dog",
+                        "I want a {size} dog",
+                        "I want a dog"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "sizeType",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "large",
+                                "synonyms": [
+                                    "gigantic",
+                                    "scary big",
+                                    "huge"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "medium",
+                                "synonyms": [
+                                    "up to my knees",
+                                    "average"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "small",
+                                "synonyms": [
+                                    "take on an airplane",
+                                    "little"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "tempermentType",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "family",
+                                "synonyms": [
+                                    "is kid friendly"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "guard",
+                                "synonyms": [
+                                    "protective"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "DogMatchIntent",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.701331672254"
+                    },
+                    "slots": [
+                        {
+                            "name": "size",
+                            "type": "sizeType",
+                            "confirmationRequired": true,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "confirmation": "Confirm.Slot.415311082184.975596646253",
+                                "elicitation": "Elicit.Slot.783804495556.847474001856"
+                            }
+                        },
+                        {
+                            "name": "temperment",
+                            "type": "tempermentType",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.783804495556.847474001856",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "what size are you looking for. Small, Medium or large?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.415311082184.975596646253",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "you want a {size} dog. Is that correct?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "a {size} . Is that correct?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.701331672254",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "I am going to match you with a {size} dog. Do you want to proceed?"
+                    },
+                    {
+                        "type": "PlainText",
+                        "value": "I am going to match you with a {size} {temperment} dog. Do you want to proceed?"
+                    }
+                ]
+            }
+        ]
+    }
+}

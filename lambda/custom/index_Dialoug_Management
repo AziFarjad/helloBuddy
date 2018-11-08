@@ -1,3 +1,21 @@
+const SampleHandler = {
+  canHandle(handlerInput) {
+    console.log("Inside SampleHandler");
+    const request = handlerInput.requestEnvelope.request;
+    return request.type === 'LaunchRequest'
+      || (request.type === 'IntentRequest'
+        && request.intent.name === 'sampleIntent');
+  },
+  handle(handlerInput, error) {
+    console.log("Inside SampleHandler - handle");
+    let message = 'Test';
+    return handlerInput.responseBuilder
+      .speak(message)
+      .getResponse();
+  },
+};
+
+
 // SIMPLE CODE - Using Dialoge Management - Be Relatable
 // Slot Elicitation - Under/Over answering management - Confirmation
 const InProgressPetMatchIntent = {
